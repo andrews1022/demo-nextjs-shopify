@@ -1,14 +1,22 @@
 import type { GetStaticPaths, GetStaticProps, NextPage } from 'next';
+import Image from 'next/image';
 import type { ParsedUrlQuery } from 'querystring';
+
+import Badge from 'react-bootstrap/Badge';
+import Button from 'react-bootstrap/Button';
+import Col from 'react-bootstrap/Col';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+
+import type { ShopifyProduct } from '../../types/shopify';
+import formatPrice from '../../utils/formatPrice';
 
 import { gql } from '../../utils/gql';
 
 type PathsGraphQLResponse = {
   data: {
     products: {
-      nodes: {
-        handle: string;
-      }[];
+      nodes: ShopifyProduct[];
     };
   };
 };
@@ -51,9 +59,7 @@ type IParams = ParsedUrlQuery & {
 
 type PropsGraphQLResponse = {
   data: {
-    product: {
-      title: string;
-    };
+    product: ShopifyProduct;
   };
 };
 
@@ -70,7 +76,28 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
       query: gql`
         query SingleProductQuery($handle: String!) {
           product(handle: $handle) {
+            description
+            images(first: 2) {
+              nodes {
+                altText
+                height
+                id
+                url
+                width
+              }
+            }
+            priceRange {
+              minVariantPrice {
+                amount
+              }
+            }
+            tags
             title
+            variants(first: 1) {
+              nodes {
+                sku
+              }
+            }
           }
         }
       `,
@@ -92,10 +119,40 @@ export const getStaticProps: GetStaticProps = async ({ params }) => {
 type ProductPageProps = PropsGraphQLResponse;
 
 const ProductPage: NextPage<ProductPageProps> = ({ data }) => {
+  const { product } = data;
+
   return (
-    <div>
-      <h1>Product Page for {data.product.title}</h1>
-    </div>
+    <Container className='mt-5 mb-5'>
+      <Row xs={1} md={2} className='align-items-center g-4'>
+        <Col>
+          {product.images.nodes.map((image) => (
+            <Image
+              key={image.id}
+              src={image.url}
+              alt={image.altText}
+              placeholder='blur'
+              blurDataURL={image.url}
+              height={image.height}
+              width={image.width}
+            />
+          ))}
+        </Col>
+
+        <Col>
+          {product.tags.map((tag) => (
+            <Badge key={tag} pill bg='warning' text='dark'>
+              {tag}
+            </Badge>
+          ))}
+          <h1>{product.title}</h1>
+          <p>{product.description}</p>
+
+          <p>{formatPrice(product.priceRange.minVariantPrice.amount)}</p>
+
+          <Button variant='primary'>Add to Cart</Button>
+        </Col>
+      </Row>
+    </Container>
   );
 };
 

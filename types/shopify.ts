@@ -1,5 +1,12 @@
 export type ShopifyProduct = {
   description: string;
+  featuredImage: {
+    altText: string;
+    height: number;
+    id: string;
+    url: string;
+    width: number;
+  };
   handle: string;
   images: {
     nodes: {
@@ -17,4 +24,9 @@ export type ShopifyProduct = {
   };
   tags: string[];
   title: string;
+  variants: {
+    nodes: {
+      sku: string;
+    }[];
+  };
 };

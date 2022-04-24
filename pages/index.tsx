@@ -35,24 +35,22 @@ export const getStaticProps: GetStaticProps = async () => {
         query ProductsQuery {
           products(first: 6, sortKey: TITLE) {
             nodes {
-              title
-              handle
               description
-              tags
+              featuredImage {
+                altText
+                height
+                id
+                url
+                width
+              }
+              handle
               priceRange {
                 minVariantPrice {
                   amount
                 }
               }
-              images(first: 1) {
-                nodes {
-                  altText
-                  height
-                  id
-                  url
-                  width
-                }
-              }
+              tags
+              title
             }
           }
         }
@@ -85,7 +83,7 @@ const Home: NextPage<HomeProps> = ({ data }) => (
           <Col key={product.title}>
             <Card className='h-100'>
               <Card.Img
-                src={product.images.nodes[0].url}
+                src={product.featuredImage.url}
                 style={{ maxHeight: '25vw', objectFit: 'cover' }}
                 variant='top'
               />
