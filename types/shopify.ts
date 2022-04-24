@@ -1,13 +1,6 @@
 export type ShopifyProduct = {
-  title: string;
-  handle: string;
   description: string;
-  tags: string[];
-  priceRange: {
-    minVariantPrice: {
-      amount: string;
-    };
-  };
+  handle: string;
   images: {
     nodes: {
       altText: string;
@@ -17,4 +10,11 @@ export type ShopifyProduct = {
       width: number;
     }[];
   };
+  priceRange: {
+    minVariantPrice: {
+      amount: string;
+    };
+  };
+  tags: string[];
+  title: string;
 };
