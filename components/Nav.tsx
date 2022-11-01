@@ -1,11 +1,11 @@
-import Link from 'next/link';
+import Link from "next/link";
 
 const Nav = () => (
   <header>
     <nav>
       <ul>
         <li>
-          <Link href='/'>Next.js + Shopify</Link>
+          <Link href="/">Home</Link>
         </li>
       </ul>
     </nav>
