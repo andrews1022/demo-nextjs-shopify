@@ -1,3 +1,3 @@
-# Demo: Next.js + Shopify
+# Demo: Next + Shopify
 
-Very basic setup of Next.js and Shopify as a headless backend.
+Very basic setup of Next and Shopify as a headless backend.
